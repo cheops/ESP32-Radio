@@ -189,8 +189,8 @@
 #define HX8357                         // HX8357 480*320
 //#define NEXTION                      // Nextion display. Uses UART 2 (pin 16 and 17)
 //
-// 1 for normal screens, 480*320 can use 2
-#define FONT_SIZE 4
+// 1 for normal screens, 480*320 can use 3
+#define FONT_SIZE 3
 //
 #include <Arduino.h>
 #include <nvs.h>

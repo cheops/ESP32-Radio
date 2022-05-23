@@ -4672,8 +4672,10 @@ void handlebyte_ch ( uint8_t b )
           icyname = metaline.substring(9) ;            // Get station name
           icyname = decode_spec_chars ( icyname ) ;    // Decode special characters in name
           icyname.trim() ;                             // Remove leading and trailing spaces
-          tftset ( 2, icyname ) ;                      // Set screen segment bottom part
-          mqttpub.trigger ( MQTT_ICYNAME ) ;           // Request publishing to MQTT
+          if (!icyname.isEmpty()){
+            tftset ( 2, icyname ) ;                    // Set screen segment bottom part
+            mqttpub.trigger ( MQTT_ICYNAME ) ;         // Request publishing to MQTT
+          }
         }
         else if ( lcml.startsWith ( "transfer-encoding:" ) )
         {

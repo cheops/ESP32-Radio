@@ -178,7 +178,7 @@
 //#define CH376                          // For CXH376 support (reading files from USB stick)
 //#define SDCARD                         // For SD card support (reading files from SD card)
 // Define (just one) type of display.  See documentation.
-#define BLUETFT                        // Works also for RED TFT 128x160
+//#define BLUETFT                        // Works also for RED TFT 128x160
 //#define OLED1306                     // 64x128 I2C OLED SSD1306
 //#define OLED1309                     // 64x128 I2C OLED SSD1309
 //#define OLED1106                     // 64x128 I2C OLED SH1106
@@ -186,7 +186,11 @@
 //#define LCD1602I2C                   // LCD 1602 display with I2C backpack
 //#define LCD2004I2C                   // LCD 2004 display with I2C backpack
 //#define ILI9341                      // ILI9341 240*320
+#define HX8357                         // HX8357 480*320
 //#define NEXTION                      // Nextion display. Uses UART 2 (pin 16 and 17)
+//
+// 1 for normal screens, 480*320 can use 2
+#define FONT_SIZE 4
 //
 #include <Arduino.h>
 #include <nvs.h>
@@ -220,8 +224,8 @@
 #define MAXMQTTCONNECTS 5
 // Adjust size of buffer to the longest expected string for nvsgetstr
 #define NVSBUFSIZE 150
-// Position (column) of time in topline relative to end
-#define TIMEPOS -52
+// Position (column) of time in topline relative to end: 8 chars, 6 wide, + 4 pixels
+#define TIMEPOS -((8 * 6 * FONT_SIZE)+4)
 // SPI speed for SD card
 #define SDSPEED 1000000
 // Size of metaline buffer
@@ -379,7 +383,7 @@ struct keyname_t                                      // For keys in NVS
 
 enum display_t { T_UNDEFINED, T_BLUETFT, T_OLED,             // Various types of display
                  T_DUMMYTFT, T_LCD1602I2C, T_LCD2004I2C,
-                 T_ILI9341, T_NEXTION } ;
+                 T_ILI9341, T_HX8357, T_NEXTION } ;
 
 enum datamode_t { INIT = 0x1, HEADER = 0x2, DATA = 0x4,      // State for datastream
                   METADATA = 0x8, PLAYLISTINIT = 0x10,
@@ -1148,6 +1152,9 @@ VS1053* vs1053player ;
 #endif
 #ifdef ILI9341
  #include "ILI9341.h"                                    // For ILI9341 320x240 display
+#endif
+#ifdef HX8357
+ #include "HX8357.h"                                    // For HX8357 480x320 display
 #endif
 #ifdef OLED1306
  #include "oled.h"                                       // For OLED I2C SD1306 64x128 display
@@ -3304,6 +3311,9 @@ void setup()
 #if defined ( ILI9341 )                                // Report display option
   dbgprint ( dtyp, "ILI9341" ) ;
 #endif
+#if defined ( HX8357 )                                // Report display option
+  dbgprint ( dtyp, "HX8357" ) ;
+#endif
 #if defined ( OLED1306 )
   dbgprint ( dtyp, "OLED1306" ) ;
 #endif
@@ -3396,7 +3406,7 @@ void setup()
     {
       dsp_setRotation() ;                                // Use landscape format
       dsp_erase() ;                                      // Clear screen
-      dsp_setTextSize ( 1 ) ;                            // Small character font
+      dsp_setTextSize ( FONT_SIZE ) ;                    // Small character font
       dsp_setTextColor ( WHITE ) ;                       // Info in white
       dsp_setCursor ( 0, 0 ) ;                           // Top of screen
       dsp_print ( "Starting..." "\n" "Version:" ) ;

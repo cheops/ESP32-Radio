@@ -148,7 +148,7 @@
 // 15-05-2019, ES: MAX number of presets as a defined constant.
 // 16-12-2019, ES: Modify of claimSPI() function for debugability.
 // 21-12-2019, ES: Check chip version.
-triplecl// 23-03-2020, ES: Allow playlists on SD card.
+// 23-03-2020, ES: Allow playlists on SD card.
 // 25-03-2020, ES: End of playlist: start over.
 // 09-07-2020, ES: Add CH376 support.
 // 14-07-2020, ES: Dynamic status display in webinterface.
@@ -237,6 +237,10 @@ triplecl// 23-03-2020, ES: Allow playlists on SD card.
 #define MQTT_SUBTOPIC     "command"           // Command to receive from MQTT
 //
 #define otaclient mp3client                   // OTA uses mp3client for connection to host
+
+const int8_t RADIO_SPI_SCK_PIN = 5;
+const int8_t RADIO_SPI_MISO_PIN = 19;
+const int8_t RADIO_SPI_MOSI_PIN = 18;
 
 //**************************************************************************************************
 // Forward declaration and prototypes of various functions.                                        *
@@ -2609,9 +2613,9 @@ void readIOprefs()
     { "pin_vs_dreq",   &ini_block.vs_dreq_pin,      -1 },
     { "pin_shutdown",  &ini_block.vs_shutdown_pin,  -1 }, // Amplifier shut-down pin
     { "pin_shutdownx", &ini_block.vs_shutdownx_pin, -1 }, // Amplifier shut-down pin (inversed logic)
-    { "pin_spi_sck",   &ini_block.spi_sck_pin,      18 },
-    { "pin_spi_miso",  &ini_block.spi_miso_pin,     19 },
-    { "pin_spi_mosi",  &ini_block.spi_mosi_pin,     23 },
+    { "pin_spi_sck",   &ini_block.spi_sck_pin,      RADIO_SPI_SCK_PIN  },
+    { "pin_spi_miso",  &ini_block.spi_miso_pin,     RADIO_SPI_MISO_PIN },
+    { "pin_spi_mosi",  &ini_block.spi_mosi_pin,     RADIO_SPI_MOSI_PIN },
     { NULL,            NULL,                        0  }  // End of list
   } ;
   int         i ;                                         // Loop control
